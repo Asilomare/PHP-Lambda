@@ -15,12 +15,30 @@ class phpLambdaStack(Stack):
 
         function = _lambda.DockerImageFunction(self, 'phpLambda',
             code=_lambda.DockerImageCode.from_image_asset('lambda'),
-            
-            # More options
-            # timeout=Duration.seconds(300),
-            # memory_size=512,
         )
         
         api = apigw.LambdaRestApi(self, 'phpApi',
             handler=function
+        )
+        plan = api.add_usage_plan("UsagePlan")
+        
+        key = api.add_api_key("ApiKey",
+            value="hjovtrvbkhljn345678inuf43txchexjn"
+        )
+        
+        plan.add_api_key(key)
+        
+        # x-api-key: hjovtrvbkhljn345678inuf43txchexjn
+        
+        php_endpoint = api.root.add_resource("php")
+        php_endpoint.add_method("GET", 
+            api_key_required=True,
+            request_parameters={
+              'method.request.header.x-api-key': True,
+            },
+        )
+        
+        
+        plan.add_api_stage(
+            stage=api.deployment_stage
         )
