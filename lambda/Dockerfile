@@ -35,10 +35,12 @@ RUN curl -sL https://github.com/php/php-src/archive/php-${php_version}.tar.gz | 
 COPY runtime/bootstrap /lambda-php-runtime/
 RUN chmod 0755 /lambda-php-runtime/bootstrap
 
-# Install Guzzle, prepare vendor files
+# Install Guzzle and Symfony, prepare vendor files
 RUN mkdir /lambda-php-vendor && \
     cd /lambda-php-vendor && \
-    /opt/php-7-bin/bin/php /opt/php-7-bin/bin/composer require guzzlehttp/guzzle
+    /opt/php-7-bin/bin/php /opt/php-7-bin/bin/composer require guzzlehttp/guzzle && \
+    /opt/php-7-bin/bin/php /opt/php-7-bin/bin/composer require symfony/symfony
+    # /opt/php-7-bin/bin/php /opt/php-7-bin/bin/composer require symfony/http-foundation # optimized package, slimmer
 
 ###### Create runtime image ######
 FROM public.ecr.aws/lambda/provided as runtime

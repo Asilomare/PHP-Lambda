@@ -1,5 +1,5 @@
-
  <?
+ require '/opt/vendor/autoload.php';
 
 function index($data)
 {
